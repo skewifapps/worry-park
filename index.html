@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worry Park</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#e8f0e8;height:100vh;display:flex;align-items:center;justify-content:center;padding:0;overflow:hidden;}
+.wrap{width:300px;}
+.bc{font-size:10px;color:#888;text-align:center;margin-bottom:6px;min-height:14px;}
+.phone{width:300px;height:min(590px,calc(100vh - 36px));border-radius:34px;border:2.5px solid #ccc;background:#f7f5f0;overflow:hidden;position:relative;}
+.pbar{height:26px;background:#f7f5f0;display:flex;align-items:center;justify-content:center;}
+.notch{width:56px;height:4px;border-radius:2px;background:#ccc;}
+.scr{position:absolute;inset:26px 0 0 0;display:flex;flex-direction:column;padding:14px 13px 18px;background:#f7f5f0;opacity:0;pointer-events:none;transition:opacity .25s;overflow-y:auto;overflow-x:hidden;}
+.scr.active{opacity:1;pointer-events:all;}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;margin-bottom:7px;}
+.tg{background:#d4edda;color:#1e5c35;}.tb{background:#dbeafe;color:#1e3a8a;}.ta{background:#fdebc8;color:#7a4f00;}
+h2{font-size:17px;font-weight:700;color:#1a2e1a;line-height:1.3;margin-bottom:4px;}
+p.sub{font-size:12px;color:#5a7a5a;line-height:1.5;margin-bottom:10px;}
+.btn{width:100%;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;}
+.btn-p{background:#2e7d5e;color:white;}
+.btn-p:disabled{background:#9ab89a;cursor:not-allowed;}
+.btn-g{background:transparent;color:#5a7a5a;font-size:12px;text-decoration:underline;padding:6px;border:none;cursor:pointer;font-family:inherit;margin-top:4px;width:100%;}
+.btn-outline{width:100%;border:1.5px solid #2e7d5e;border-radius:12px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px;background:white;color:#2e7d5e;}
+.back{background:transparent;border:none;font-size:18px;color:#5a7a5a;cursor:pointer;padding:0;margin-bottom:8px;align-self:flex-start;}
+.ps{position:relative;width:100%;height:120px;border-radius:16px;overflow:hidden;margin-bottom:8px;flex-shrink:0;}
+.sky{position:absolute;inset:0;height:75px;background:linear-gradient(180deg,#c8e8f4,#e8f4ee);}
+.sun{position:absolute;width:22px;height:22px;border-radius:50%;background:#f5d97a;top:11px;right:14px;}
+.gtop{position:absolute;bottom:42px;left:0;right:0;height:13px;background:#8ec98e;border-radius:50% 50% 0 0/100% 100% 0 0;}
+.gnd{position:absolute;bottom:0;left:0;right:0;height:48px;background:#7ab87a;border-radius:0 0 16px 16px;}
+.pth{position:absolute;bottom:0;left:0;right:0;height:27px;background:#c8b89a;}
+.tree{position:absolute;bottom:40px;}
+.tn{width:6px;height:18px;background:#8b6340;border-radius:2px;margin:0 auto;}
+.cp{border-radius:50% 50% 40% 40%;margin:0 auto;position:relative;top:4px;}
+.dl{position:absolute;bottom:4px;left:0;right:0;border-top:2px dashed rgba(160,140,110,.4);}
+.bh{width:12px;height:12px;border-radius:50%;background:#f5c5a0;border:1.5px solid #d4a080;margin:0 auto;}
+.fb{width:2px;height:13px;border-radius:2px;margin:1px auto 0;}
+.fa{width:2px;height:10px;border-radius:2px;position:absolute;top:14px;left:7px;transform-origin:top center;}
+.fl{width:2px;height:11px;border-radius:2px;position:absolute;top:26px;left:7px;transform-origin:top center;}
+.fig{position:relative;width:16px;height:38px;}
+.al{animation:al .52s ease-in-out infinite alternate;}
+.ar{animation:ar .52s ease-in-out infinite alternate;}
+.ll{animation:ll .52s ease-in-out infinite alternate;}
+.lr{animation:lr .52s ease-in-out infinite alternate;}
+@keyframes al{from{transform:rotate(-28deg);}to{transform:rotate(18deg);}}
+@keyframes ar{from{transform:rotate(18deg);}to{transform:rotate(-28deg);}}
+@keyframes ll{from{transform:rotate(-24deg);}to{transform:rotate(14deg);}}
+@keyframes lr{from{transform:rotate(14deg);}to{transform:rotate(-24deg);}}
+.wbob{animation:wb .52s ease-in-out infinite alternate;}
+@keyframes wb{from{transform:translateY(0);}to{transform:translateY(1.5px);}}
+.win{position:absolute;bottom:26px;animation:win 4s ease-out forwards;}
+@keyframes win{from{left:-24px;}to{left:34%;}}
+.fork-m{position:absolute;bottom:0;left:0;width:54%;height:34px;background:#c8b89a;clip-path:polygon(0 0,100% 18%,100% 100%,0 100%);}
+.fork-l{position:absolute;bottom:13px;left:50%;width:23%;height:24px;background:#c8b89a;transform-origin:left bottom;transform:rotate(-22deg);border-radius:0 4px 0 0;}
+.fork-r{position:absolute;bottom:0;left:50%;width:25%;height:23px;background:#c8b89a;transform-origin:left top;transform:rotate(10deg);}
+.spost{position:absolute;bottom:34px;left:51%;}
+.spole{width:2px;height:13px;background:#8b6340;margin:0 auto;}
+.sl{position:absolute;top:0;left:-18px;background:#f5e4b0;border:1px solid #c8a060;border-radius:3px;padding:1px 4px;font-size:7px;font-weight:700;color:#7a5000;transform:rotate(-12deg);}
+.sr{position:absolute;top:5px;left:3px;background:#d4edda;border:1px solid #2e7d5e;border-radius:3px;padding:1px 4px;font-size:7px;font-weight:700;color:#1e5c35;transform:rotate(8deg);}
+.fw{position:absolute;bottom:24px;animation:wf 3s ease-out forwards;}
+@keyframes wf{from{left:-22px;}to{left:38%;}}
+.qm{position:absolute;top:-19px;left:7px;background:white;border:1px solid #b8d4b8;border-radius:9px 9px 9px 3px;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#2e7d5e;opacity:0;animation:qin .4s ease 3.1s forwards,qp 1.1s ease 3.5s infinite;}
+@keyframes qin{to{opacity:1;}}@keyframes qp{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+.hl{animation:hl 2.2s ease-in-out 3.4s infinite;}
+@keyframes hl{0%,100%{transform:rotate(0);}25%{transform:rotate(-16deg);}65%{transform:rotate(16deg);}}
+.bobj{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:42px;}
+.bk{height:4px;background:#a0845a;border-radius:2px;margin-bottom:3px;}
+.bs{height:4px;background:#b0945a;border-radius:2px;}
+.bls{display:flex;justify-content:space-between;padding:0 4px;margin-top:2px;}
+.bll{width:2.5px;height:10px;background:#886040;border-radius:1px;}
+.bw{position:absolute;bottom:24px;animation:bwalk 3s ease-out forwards;}
+@keyframes bwalk{from{left:-22px;}to{left:calc(50% - 22px);}}
+.fo{animation:fo .1s ease 3.1s forwards;}@keyframes fo{to{opacity:0;}}
+.sit{position:absolute;bottom:50px;left:50%;transform:translateX(-32%);opacity:0;animation:si .3s ease 3.15s forwards;}
+@keyframes si{to{opacity:1;}}
+.sb2{width:11px;height:12px;background:#3a7a5a;border-radius:3px 3px 0 0;margin:1px auto 0;}
+.sl2{display:flex;gap:3px;justify-content:center;margin-top:1px;}
+.sl3{width:3px;height:10px;background:#2a5a3a;border-radius:0 0 2px 2px;}
+.zzz{position:absolute;font-size:11px;font-weight:700;color:#7ab8c8;opacity:0;animation:zf 2.5s ease-in-out infinite;}
+.z1{top:34px;left:52%;animation-delay:4.8s;font-size:9px;}.z2{top:24px;left:56%;animation-delay:5.6s;}.z3{top:15px;left:60%;animation-delay:6.4s;font-size:13px;}
+@keyframes zf{0%{opacity:0;transform:translateY(0);}20%{opacity:.7;}100%{opacity:0;transform:translateY(-22px);}}
+.gs{position:relative;width:100%;height:130px;border-radius:16px;overflow:hidden;margin-bottom:10px;}
+.gw{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);width:54px;}
+.gp{position:absolute;bottom:0;width:6px;border-radius:2px;background:#6b4c28;}
+.gp.l{left:0;height:38px;}.gp.r{right:0;height:38px;}
+.gtb{position:absolute;top:0;left:0;right:0;height:5px;background:#6b4c28;border-radius:2px;}
+.gpn{position:absolute;bottom:7px;height:24px;background:#c8a060;border:1.5px solid #9a7030;border-radius:2px;}
+.gpn.l{left:5px;width:18px;transform-origin:left center;transform:perspective(60px) rotateY(-72deg);animation:gcl 1.3s cubic-bezier(.4,0,.2,1) .5s forwards;}
+.gpn.r{right:5px;width:18px;transform-origin:right center;transform:perspective(60px) rotateY(72deg);animation:gcr 1.3s cubic-bezier(.4,0,.2,1) .5s forwards;}
+@keyframes gcl{to{transform:perspective(60px) rotateY(0);}}@keyframes gcr{to{transform:perspective(60px) rotateY(0);}}
+.grl{position:absolute;height:1.5px;background:#9a7030;left:0;right:0;border-radius:1px;}
+.glt{position:absolute;bottom:11px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#6b4c28;border:1px solid #4a3018;opacity:0;animation:gli .2s ease 1.8s forwards;}
+@keyframes gli{to{opacity:1;}}
+.gwalker{position:absolute;bottom:24px;animation:gwa 5s linear 0s infinite;}
+@keyframes gwa{0%{left:50%;opacity:1;}65%{left:110%;opacity:1;}66%{left:110%;opacity:0;}67%{left:32%;opacity:0;}80%{left:32%;opacity:0;}82%{left:32%;opacity:1;}100%{left:50%;opacity:1;}}
+.sfig{position:relative;width:16px;height:38px;transform:scaleX(-1);}
+.gbob{animation:gbob .52s ease-in-out infinite alternate;}
+@keyframes gbob{from{transform:translateY(0);}to{transform:translateY(1.5px);}}
+.gfa{width:2px;height:10px;border-radius:2px;position:absolute;top:14px;left:7px;transform-origin:top center;}
+.gfl{width:2px;height:11px;border-radius:2px;position:absolute;top:26px;left:7px;transform-origin:top center;}
+.pkc{position:absolute;top:9px;left:9px;background:white;border-radius:10px;border:1px solid #b8d4b8;padding:6px 10px;opacity:0;animation:ci .4s ease 2s forwards;}
+@keyframes ci{to{opacity:1;}}
+.pcard{background:white;border:1.5px solid #b8d4b8;border-radius:14px;padding:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;}
+.pcard:hover{border-color:#2e7d5e;}.pcard.sug{border-color:#2e7d5e;background:#eef7ee;}
+.sbadge{font-size:9px;font-weight:700;background:#2e7d5e;color:white;border-radius:8px;padding:1px 7px;display:inline-block;margin-bottom:4px;}
+.bf{background:#7a5230;border-radius:10px;padding:8px;border:3px solid #5a3a18;margin-bottom:8px;}
+.bi{background:#c8a060;border-radius:4px;padding:8px 6px 10px;background-image:repeating-linear-gradient(90deg,transparent,transparent 14px,rgba(160,120,60,.07) 14px,rgba(160,120,60,.07) 15px),repeating-linear-gradient(0deg,transparent,transparent 14px,rgba(160,120,60,.07) 14px,rgba(160,120,60,.07) 15px);}
+.btb{text-align:center;font-size:9px;font-weight:700;color:#5a3a18;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;border-bottom:1px solid rgba(90,58,24,.3);padding-bottom:4px;}
+.ng2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;}
+.nt{border-radius:3px;padding:5px 4px 7px;font-size:8.5px;font-weight:600;position:relative;border:1px solid rgba(0,0,0,.08);min-height:52px;display:flex;flex-direction:column;line-height:1.3;cursor:pointer;}
+.nt::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;border:1px solid rgba(0,0,0,.3);z-index:2;}
+.nt.sel{outline:2px solid #2e7d5e;box-shadow:0 0 0 2px rgba(46,125,94,.15);}
+.nt.fdd{opacity:.3;pointer-events:none;}
+.tk{display:none;position:absolute;top:2px;right:3px;font-size:10px;color:#2e7d5e;}
+.nt.sel .tk{display:block;}
+.nt.blk{background:#fffef5;border:1.2px dashed #c8b870;color:#8a7a40;}
+.blbl{font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;color:#b09840;margin-bottom:2px;}
+.bta{background:transparent;border:none;outline:none;resize:none;font-family:'Nunito',sans-serif;font-size:8px;font-weight:600;color:#3a3010;width:100%;flex:1;padding:0;line-height:1.35;overflow:hidden;}
+.bta::placeholder{color:#c8b870;font-weight:400;font-style:italic;font-size:8px;}
+.nt.blk.ht{border-style:solid;border-color:#a09030;background:#fef9d4;}
+.nt.blk.ht.sel{outline:2px solid #2e7d5e;}
+.nyl{background:#fef9c3;color:#5a4a00;}.nyl::before{background:#e53e3e;}
+.nwh{background:#fafaf8;color:#3a3a3a;}.nwh::before{background:#3b82f6;}
+.ngr{background:#dcfce7;color:#14532d;}.ngr::before{background:#16a34a;}
+.nbl{background:#dbeafe;color:#1e3a8a;}.nbl::before{background:#6366f1;}
+.npk{background:#fce7f3;color:#831843;}.npk::before{background:#ec4899;}
+.tpd::after{content:'';position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:18px;height:6px;background:rgba(255,255,220,.65);border:1px solid rgba(200,180,100,.4);border-radius:1px;}
+.tpd::before{display:none;}
+.nlb{font-size:7px;text-transform:uppercase;letter-spacing:.05em;opacity:.55;margin-bottom:2px;}
+.nem{font-size:11px;margin-bottom:1px;}
+.wd{grid-column:span 2;}
+.r1{transform:rotate(-2.5deg);}.r2{transform:rotate(1.5deg);}.r3{transform:rotate(-1deg);}
+.r4{transform:rotate(3deg);}.r5{transform:rotate(-3.5deg);}.r6{transform:rotate(.8deg);}
+.r7{transform:rotate(-1.8deg);}.r8{transform:rotate(2.2deg);}
+.pc-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.pc-opt{background:white;border:1.5px solid #b8d4b8;border-radius:12px;padding:9px 8px;cursor:pointer;transition:all .2s;position:relative;}
+.pc-opt.chosen{border-color:#2e7d5e;background:#eef7ee;}
+.pc-opt.faded{opacity:.35;pointer-events:none;}
+.pc-chosen-badge{display:none;position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:700;background:#2e7d5e;color:white;border-radius:8px;padding:1px 8px;white-space:nowrap;}
+.pc-opt.chosen .pc-chosen-badge{display:block;}
+.pc-name{font-size:10px;font-weight:700;color:#1a2e1a;margin-bottom:6px;line-height:1.3;text-align:center;padding-bottom:5px;border-bottom:0.5px solid #e0ede0;}
+.pc-sec{margin-bottom:4px;}
+.pc-head{font-size:7.5px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;font-weight:700;}
+.pc-for .pc-head{color:#1e5c35;}.pc-ag .pc-head{color:#7a1a1a;}
+.pc-field{width:100%;border:none;border-bottom:1px dashed #c8d8c8;background:transparent;font-family:'Nunito',sans-serif;font-size:8.5px;color:#3a5a3a;outline:none;padding:2px 0;line-height:1.3;resize:none;overflow:hidden;}
+.pc-field::placeholder{color:#b8d4b8;font-style:italic;}
+.gc{background:white;border:1.5px solid #b8d4b8;border-radius:12px;padding:11px;cursor:pointer;display:flex;align-items:center;gap:10px;margin-bottom:7px;transition:all .15s;}
+.gc:hover{border-color:#2e7d5e;background:#eef7ee;}
+.gi{font-size:20px;flex-shrink:0;}.gt{font-size:13px;font-weight:700;color:#1a2e1a;}.gsb{font-size:10px;color:#5a7a5a;margin-top:1px;}
+.why-box{background:#eef7ee;border-radius:8px;padding:7px 10px;font-size:11px;color:#1e5c35;line-height:1.4;margin-bottom:10px;border-left:2.5px solid #2e7d5e;}
+.snum{font-size:50px;font-weight:700;color:#2e7d5e;line-height:1;text-align:center;}
+.sico{font-size:32px;text-align:center;margin:3px 0;}
+.slbl{font-size:13px;font-weight:700;color:#1a2e1a;text-align:center;margin-bottom:2px;}
+.spro{font-size:11px;color:#5a7a5a;line-height:1.4;text-align:center;}
+.sdots{display:flex;justify-content:center;gap:6px;margin:8px 0 5px;}
+.sd{width:9px;height:9px;border-radius:50%;background:#b8d4b8;transition:all .3s;}
+.sd.dn{background:#2e7d5e;}.sd.ac{background:#2e7d5e;width:24px;border-radius:4px;}
+.tbar{height:4px;background:#e0ede0;border-radius:2px;margin:5px 0;overflow:hidden;}
+.tfill{height:100%;background:#2e7d5e;border-radius:2px;width:100%;}
+.bsv{position:relative;width:136px;height:136px;margin:4px auto 8px;}
+.bin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.bph{font-size:12px;font-weight:700;color:#1a2e1a;text-align:center;}
+.bct{font-size:28px;font-weight:700;color:#2e7d5e;line-height:1;}
+.bir{font-size:11px;color:#5a7a5a;text-align:center;margin-bottom:3px;}
+.bcl{font-size:10px;color:#9ab89a;text-align:center;margin-bottom:5px;}
+.pico{font-size:30px;text-align:center;margin-bottom:4px;}
+.pprt{font-size:15px;font-weight:700;color:#1a2e1a;text-align:center;margin-bottom:6px;}
+.pins{font-size:13px;font-weight:700;text-align:center;margin-bottom:10px;transition:color .3s;line-height:1.4;}
+.pins.tn{color:#c0392b;}.pins.rl{color:#2e7d5e;}
+.pring{position:relative;width:72px;height:72px;margin:0 auto 6px;}
+.pdts{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-bottom:7px;}
+.pd{width:8px;height:8px;border-radius:50%;background:#b8d4b8;transition:background .3s;}
+.pd.dn{background:#2e7d5e;}.pd.ac{background:#f97316;}
+.frow{display:flex;justify-content:space-between;margin:8px 0 6px;}
+.fb2{width:40px;height:40px;border-radius:50%;border:1.5px solid #b8d4b8;background:white;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;}
+.fb2.ac{border-color:#2e7d5e;background:#eef7ee;transform:scale(1.2);}
+.support-box{background:#fef9f9;border:1px solid #f0c0c0;border-radius:10px;padding:10px;margin-top:8px;display:none;}
+.support-box.show{display:block;}
+.sup-title{font-size:12px;font-weight:700;color:#7a1a1a;margin-bottom:6px;}
+.sup-link{font-size:11px;color:#2e7d5e;font-weight:700;display:block;padding:4px 0;cursor:pointer;}
+.after-tech{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid #e0ede0;}
+.at-btn{flex:1;border:1.5px solid #b8d4b8;border-radius:10px;background:white;padding:8px 4px;font-size:11px;font-weight:700;color:#3a5a3a;text-align:center;cursor:pointer;font-family:inherit;line-height:1.3;}
+.at-btn:hover{border-color:#2e7d5e;background:#eef7ee;}
+.sta{background:white;border-radius:10px;border:1.5px solid #b8d4b8;padding:10px;font-size:13px;font-family:inherit;color:#1a2e1a;width:100%;outline:none;resize:none;line-height:1.5;}
+.srow{display:flex;gap:6px;margin:7px 0 4px;}
+.sbtn{flex:1;padding:8px 3px;border-radius:8px;border:1.5px solid #b8d4b8;background:white;font-size:11px;font-weight:700;color:#3a5a3a;text-align:center;cursor:pointer;font-family:inherit;transition:all .15s;}
+.sbtn.ac{background:#2e7d5e;color:white;border-color:#2e7d5e;}
+.pt-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.pt-opt{background:white;border:1.5px solid #b8d4b8;border-radius:12px;padding:12px;cursor:pointer;font-size:13px;font-weight:700;color:#1a2e1a;transition:all .15s;display:flex;align-items:center;gap:10px;}
+.pt-opt:hover{border-color:#2e7d5e;background:#eef7ee;}
+.pt-opt.chosen{border-color:#2e7d5e;background:#eef7ee;}
+.pt-ico{font-size:20px;flex-shrink:0;}
+.hb-wrap{background:linear-gradient(135deg,#eef7ee,#e8f4f0);border-radius:14px;padding:9px 12px 7px;margin-bottom:8px;position:relative;overflow:hidden;}
+.hb-wrap::before{content:'🍃';position:absolute;right:10px;top:8px;font-size:22px;opacity:.22;}
+.hb-row{display:flex;align-items:center;gap:10px;}
+.hb-ring{position:relative;width:54px;height:54px;flex-shrink:0;}
+.hb-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#2e7d5e;text-align:center;line-height:1.2;}
+.hb-text{flex:1;}
+.hb-phase{font-size:14px;font-weight:700;color:#1a2e1a;margin-bottom:2px;}
+.hb-instr{font-size:10px;color:#5a7a5a;line-height:1.4;}
+.hb-dots{display:flex;gap:5px;margin-top:6px;}
+.hb-dot{width:7px;height:7px;border-radius:50%;background:#b8d4b8;transition:all .4s;}
+.hb-dot.done{background:#2e7d5e;}.hb-dot.active{background:#2e7d5e;width:18px;border-radius:3px;}
+.hb-ready{display:block;font-size:10px;color:#2e7d5e;font-weight:700;text-align:right;margin-top:5px;cursor:pointer;background:transparent;border:none;font-family:inherit;width:100%;}
+.hb-done{display:none;text-align:center;padding:3px 0;}
+.hb-done-txt{font-size:13px;font-weight:700;color:#2e7d5e;margin-bottom:1px;}
+.hb-done-sub{font-size:10px;color:#5a7a5a;}
+.or-divider{display:flex;align-items:center;gap:8px;margin:6px 0 2px;}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:#dde8dd;}
+.or-divider span{font-size:10px;color:#9ab89a;font-weight:700;}
+.gate-postpone{background:#eef7f4;border:1.5px solid #b8ddd0;border-radius:12px;padding:11px 12px;margin-bottom:10px;text-align:center;}
+.gp-ico{font-size:26px;margin-bottom:5px;}
+.gp-time{font-size:13px;font-weight:700;color:#1a2e1a;margin-bottom:4px;}
+.gp-msg{font-size:11px;color:#3a7a5a;line-height:1.55;}
+.pw-board{background:#7a5230;border-radius:10px;padding:8px;border:3px solid #5a3a18;flex:1;overflow-y:auto;min-height:0;}
+.pw-inner{background:#c8a060;border-radius:4px;padding:8px 6px 10px;min-height:100%;background-image:repeating-linear-gradient(90deg,transparent,transparent 14px,rgba(160,120,60,.07) 14px,rgba(160,120,60,.07) 15px),repeating-linear-gradient(0deg,transparent,transparent 14px,rgba(160,120,60,.07) 14px,rgba(160,120,60,.07) 15px);}
+.pw-title{text-align:center;font-size:9px;font-weight:700;color:#5a3a18;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;border-bottom:1px solid rgba(90,58,24,.3);padding-bottom:4px;}
+.pw-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.pw-note{border-radius:3px;padding:7px 6px 8px;font-size:8.5px;font-weight:600;line-height:1.4;position:relative;min-height:60px;}
+.pw-note::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;border:1px solid rgba(0,0,0,.25);z-index:2;}
+.pw-note-date{font-size:7px;opacity:.55;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em;}
+.pw-note-path{font-size:7px;font-weight:700;opacity:.7;margin-bottom:4px;}
+.pw-empty{text-align:center;padding:24px 10px;color:#8a6840;font-size:11px;line-height:1.5;font-style:italic;}
+.pw-nc0{background:#fef9c3;color:#5a4a00;}.pw-nc0::before{background:#e53e3e;}
+.pw-nc1{background:#dcfce7;color:#14532d;}.pw-nc1::before{background:#16a34a;}
+.pw-nc2{background:#dbeafe;color:#1e3a8a;}.pw-nc2::before{background:#6366f1;}
+.pw-nc3{background:#fce7f3;color:#831843;}.pw-nc3::before{background:#ec4899;}
+.pw-nc4{background:#fafaf8;color:#3a3a3a;}.pw-nc4::before{background:#3b82f6;}
+.pw-footer{display:flex;gap:8px;margin-top:10px;flex-shrink:0;}
+.pw-footer .at-btn{flex:1;border:1.5px solid #b8d4b8;border-radius:10px;background:white;padding:9px 4px;font-size:11px;font-weight:700;color:#3a5a3a;text-align:center;cursor:pointer;font-family:inherit;line-height:1.3;}
+.pw-footer .at-btn:hover{border-color:#2e7d5e;background:#eef7ee;}
+.pw-footer .at-btn.leave{color:#7a1a1a;border-color:#f0c0c0;}
+.pw-footer .at-btn.leave:hover{background:#fef9f9;border-color:#e09090;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="bc" id="bc">Home</div>
+<div class="phone">
+<div class="pbar"><div class="notch"></div></div>
+
+<!-- HOME -->
+<div class="scr active" id="s-home">
+  <div style="text-align:center;margin-bottom:9px;"><div style="font-size:26px;margin-bottom:3px;">🌳</div><div style="font-size:17px;font-weight:700;color:#1a2e1a;">Worry Park</div><div style="font-size:10px;color:#5a7a5a;margin-top:1px;">Take a walk with your worry.</div></div>
+  <div class="ps" style="background:#dde8f0;">
+    <div class="sky" style="background:linear-gradient(180deg,#c8d8e8,#dde8f0);"></div><div class="sun" style="background:#d4c070;opacity:.5;"></div>
+    <div class="gtop" style="background:#6a9a6a;"></div><div class="gnd" style="background:#6a9a6a;"></div><div class="pth" style="background:#b8a888;"></div>
+    <div class="tree" style="left:8px;"><div class="cp" style="width:26px;height:28px;background:#5a7a5a;"></div><div class="tn"></div></div>
+    <div class="dl"></div>
+    <div class="win"><div class="wbob"><div class="fig"><div class="bh" style="background:#d0b090;border-color:#b89070;"></div><div class="fb" style="background:#5a6a7a;"></div><div class="fa al" style="background:#5a6a7a;"></div><div class="fa ar" style="background:#5a6a7a;"></div><div class="fl ll" style="background:#3a4a5a;"></div><div class="fl lr" style="background:#3a4a5a;"></div></div></div></div>
+  </div>
+  <div class="hb-wrap">
+    <div id="hb-active">
+      <div class="hb-row">
+        <div class="hb-ring"><svg width="54" height="54" viewBox="0 0 54 54"><circle cx="27" cy="27" r="22" fill="none" stroke="#c8e8c8" stroke-width="5"/><circle id="hbarc" cx="27" cy="27" r="22" fill="none" stroke="#2e7d5e" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 27 27)"/></svg><div class="hb-inner" id="hb-ct">in</div></div>
+        <div class="hb-text"><div class="hb-phase" id="hb-phase">Breathe in...</div><div class="hb-instr" id="hb-instr">Smell the fresh park air. Let it right in.</div></div>
+      </div>
+      <div class="hb-dots" id="hb-dots"><div class="hb-dot active"></div><div class="hb-dot"></div><div class="hb-dot"></div></div>
+      <button class="hb-ready" onclick="readyBreath()">ready →</button>
+    </div>
+    <div class="hb-done" id="hb-done"><div class="hb-done-txt">🌤 That's better.</div><div class="hb-done-sub">Now — what's on your mind?</div></div>
+  </div>
+  <textarea id="home-ta" style="width:100%;background:white;border-radius:10px;border:1.5px solid #b8d4b8;padding:10px;font-size:12px;font-family:inherit;color:#3a5a3a;outline:none;resize:none;line-height:1.5;" rows="3" placeholder="Just start typing..."></textarea>
+  <div style="font-size:9px;color:#9ab89a;text-align:center;margin-top:3px;">🔒 Stays on your device. Nobody else sees this.</div>
+  <button class="btn btn-p" onclick="go('s-classifier','Classifier')">Start walking →</button>
+  <div class="or-divider"><span>or</span></div>
+  <button class="btn-outline" onclick="go('s-bench','The bench')">🪑 Go straight to a technique</button>
+</div>
+
+<!-- CLASSIFIER -->
+<div class="scr" id="s-classifier">
+  <button class="back" onclick="go('s-home','Home')">←</button>
+  <div class="ps">
+    <div class="sky"></div><div class="sun"></div><div class="gtop"></div><div class="gnd"></div>
+    <div class="fork-m"></div><div class="fork-l"></div><div class="fork-r"></div>
+    <div class="spost"><div class="sl">what if?</div><div class="sr">act on it</div><div class="spole"></div></div>
+    <div class="tree" style="left:6px;"><div class="cp" style="width:26px;height:30px;background:#4aaa4a;"></div><div class="tn"></div></div>
+    <div class="dl"></div>
+    <div class="fw"><div class="qm">?</div><div class="wbob"><div class="fig"><div class="bh hl"></div><div class="fb" style="background:#5a6a7a;"></div><div class="fa al" style="background:#5a6a7a;"></div><div class="fa ar" style="background:#5a6a7a;"></div><div class="fl ll" style="background:#3a4a5a;"></div><div class="fl lr" style="background:#3a4a5a;"></div></div></div></div>
+  </div>
+  <div class="tag ta">The fork in the path</div>
+  <h2>Three quick questions</h2>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;">
+    <div style="background:white;border-radius:10px;border:1.5px solid #b8d4b8;padding:10px;"><div style="font-size:12px;font-weight:700;color:#1a2e1a;margin-bottom:7px;">Can you do something about this?</div><div style="display:flex;gap:6px;"><div class="qb" onclick="qp(this,'yes',0)" style="flex:1;padding:6px;border-radius:8px;border:1.5px solid #b8d4b8;background:white;font-size:12px;font-weight:700;text-align:center;cursor:pointer;">Yes</div><div class="qb" onclick="qp(this,'no',0)" style="flex:1;padding:6px;border-radius:8px;border:1.5px solid #b8d4b8;background:white;font-size:12px;font-weight:700;text-align:center;cursor:pointer;">No</div></div></div>
+    <div style="background:white;border-radius:10px;border:1.5px solid #b8d4b8;padding:10px;"><div style="font-size:12px;font-weight:700;color:#1a2e1a;margin-bottom:7px;">Is this a real situation or a 'what if'?</div><div style="display:flex;gap:6px;"><div class="qb" onclick="qp(this,'real',1)" style="flex:1;padding:6px;border-radius:8px;border:1.5px solid #b8d4b8;background:white;font-size:12px;font-weight:700;text-align:center;cursor:pointer;">Real</div><div class="qb" onclick="qp(this,'hyp',1)" style="flex:1;padding:6px;border-radius:8px;border:1.5px solid #b8d4b8;background:white;font-size:12px;font-weight:700;text-align:center;cursor:pointer;">What if</div></div></div>
+    <div style="background:white;border-radius:10px;border:1.5px solid #b8d4b8;padding:10px;"><div style="font-size:12px;font-weight:700;color:#1a2e1a;margin-bottom:7px;">Can you change the outcome?</div><div style="display:flex;gap:6px;"><div class="qb" onclick="qp(this,'yes',2)" style="flex:1;padding:6px;border-radius:8px;border:1.5px solid #b8d4b8;background:white;font-size:12px;font-weight:700;text-align:center;cursor:pointer;">Yes</div><div class="qb" onclick="qp(this,'no',2)" style="flex:1;padding:6px;border-radius:8px;border:1.5px solid #b8d4b8;background:white;font-size:12px;font-weight:700;text-align:center;cursor:pointer;">No</div></div></div>
+  </div>
+  <button class="btn btn-p" id="q-btn" disabled onclick="go('s-path','Your path')">See my path →</button>
+</div>
+
+<!-- PATH -->
+<div class="scr" id="s-path">
+  <button class="back" onclick="go('s-classifier','Classifier')">←</button>
+  <h2>Your path</h2><p class="sub" id="path-txt">Both paths are open.</p>
+  <div id="p-prac" class="pcard" onclick="go('s-board','Noticeboard')"><div id="prac-badge" style="display:none;"><div class="sbadge">Suggested for you</div></div><div style="font-size:22px;margin-bottom:3px;">📋</div><div style="font-size:13px;font-weight:700;color:#1a2e1a;margin-bottom:2px;">The noticeboard</div><div style="font-size:11px;color:#5a7a5a;line-height:1.4;">Map your options, pick a first step</div></div>
+  <div id="p-bench" class="pcard" onclick="go('s-bench','The bench')"><div id="bench-badge" style="display:none;"><div class="sbadge">Suggested for you</div></div><div style="font-size:22px;margin-bottom:3px;">🪑</div><div style="font-size:13px;font-weight:700;color:#1a2e1a;margin-bottom:2px;">The bench</div><div style="font-size:11px;color:#5a7a5a;line-height:1.4;">Sit with it, ground yourself, let it rest</div></div>
+</div>
+
+<!-- NOTICEBOARD -->
+<div class="scr" id="s-board">
+  <button class="back" onclick="go('s-path','Your path')">←</button>
+  <div class="tag tg">Practical path</div>
+  <h2>What are your options?</h2>
+  <p class="sub">Type into blank notes or tap one. Pick your best 2.</p>
+  <div class="bf"><div class="bi">
+    <div class="btb">📋 Worry Park — Community Noticeboard</div>
+    <div class="ng2">
+      <div class="nt blk r2" id="nb0"><div class="blbl">Option 1</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
+      <div class="nt blk r5" id="nb1"><div class="blbl">Option 2</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
+      <div class="nt blk r1" id="nb2"><div class="blbl">Option 3</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
+      <div class="nt ngr r3" onclick="npk(this)"><div class="tk">✓</div><div class="nem">🌱</div>You've handled hard things before</div>
+      <div class="nt nwh r6 tpd wd" onclick="npk(this)"><div class="tk">✓</div><div class="nlb">park rules</div>Rule 1: Be kind to yourself. Rule 2: See rule 1.</div>
+      <div class="nt blk r4" id="nb3"><div class="blbl">Option 4</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
+      <div class="nt npk r7" onclick="npk(this)"><div class="tk">✓</div>It's okay not to know yet</div>
+      <div class="nt blk r8" id="nb4"><div class="blbl">Option 5</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
+      <div class="nt nbl r2" onclick="npk(this)"><div class="tk">✓</div><div class="nlb">forecast</div><div class="nem">🌤</div>Today: manageable</div>
+      <div class="nt nyl r6" onclick="npk(this)"><div class="tk">✓</div><div class="nem">💪</div>Progress, not perfection</div>
+    </div>
+  </div></div>
+  <div style="font-size:10px;color:#9ab89a;text-align:center;margin-top:4px;" id="brd-hint">Tap up to 2 notices</div>
+  <button class="btn btn-p" id="brd-btn" disabled onclick="go('s-proscons','Weigh it up')">These are my best two →</button>
+</div>
+
+<!-- PROS CONS -->
+<div class="scr" id="s-proscons">
+  <button class="back" onclick="go('s-board','Noticeboard')">←</button>
+  <div class="tag tg">Weigh it up</div>
+  <h2>Which one first?</h2>
+  <p class="sub">Jot your own for/against, then tap the one you'll go with.</p>
+  <div class="pc-pair" id="pc-pair"></div>
+  <button class="btn btn-p" id="pc-btn" disabled onclick="go('s-step','First step')">Go with this one →</button>
+  <button class="btn-g" onclick="go('s-board','Noticeboard')">← change my picks</button>
+</div>
+
+<!-- FIRST STEP -->
+<div class="scr" id="s-step">
+  <button class="back" onclick="go('s-proscons','Weigh it up')">←</button>
+  <div class="tag tg">First step</div>
+  <h2>What's the one first step?</h2>
+  <p class="sub">Small and specific — something you can do this week.</p>
+  <textarea class="sta" id="step-ta" rows="3" placeholder=""></textarea>
+  <div style="font-size:12px;color:#5a7a5a;margin-top:10px;margin-bottom:5px;">When?</div>
+  <div class="srow"><div class="sbtn" onclick="setSb(this)">Today</div><div class="sbtn" onclick="setSb(this)">This week</div><div class="sbtn" onclick="setSb(this)">Set alarm 🔔</div></div>
+  <button class="btn btn-p" onclick="lastPath='practical';go('s-gate','Leave the park')">Working on it →</button>
+  <button class="btn-g" onclick="lastPath='practical';go('s-gate','Leave the park')">Skip for now</button>
+</div>
+
+<!-- BENCH -->
+<div class="scr" id="s-bench">
+  <button class="back" onclick="go('s-path','Your path')">←</button>
+  <div class="ps" id="bench-scene">
+    <div class="sky"></div><div class="sun"></div><div class="gtop"></div><div class="gnd"></div><div class="pth" style="background:#c8b89a;"></div>
+    <div class="tree" style="left:6px;"><div class="cp" style="width:26px;height:32px;background:#4aaa4a;"></div><div class="tn"></div></div>
+    <div class="tree" style="right:8px;"><div class="cp" style="width:24px;height:28px;background:#5aaa5a;"></div><div class="tn" style="height:16px;"></div></div>
+    <div class="bobj"><div class="bk"></div><div class="bs"></div><div class="bls"><div class="bll"></div><div class="bll"></div></div></div>
+    <div class="zzz z1">z</div><div class="zzz z2">z</div><div class="zzz z3">Z</div>
+    <div class="bw"><div class="wbob fo"><div class="fig"><div class="bh"></div><div class="fb" style="background:#5a6a7a;"></div><div class="fa al" style="background:#5a6a7a;"></div><div class="fa ar" style="background:#5a6a7a;"></div><div class="fl ll" style="background:#3a4a5a;"></div><div class="fl lr" style="background:#3a4a5a;"></div></div></div></div>
+    <div class="sit"><div class="bh"></div><div class="sb2"></div><div class="sl2"><div class="sl3"></div><div class="sl3"></div></div></div>
+    <div style="position:absolute;bottom:5px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.8);border-radius:16px;padding:3px 10px;font-size:9px;font-weight:700;color:#2e7d5e;white-space:nowrap;opacity:0;animation:ci .5s ease 5.5s forwards;">just sit with it for a moment</div>
+    <div class="dl"></div>
+  </div>
+  <div class="tag tb">The bench</div>
+  <h2>Take a moment</h2>
+  <p class="sub">Pick something to help you settle.</p>
+  <div class="gc" onclick="go('s-54321','5-4-3-2-1')"><div class="gi">👁</div><div><div class="gt">5-4-3-2-1 grounding</div><div class="gsb">Use your senses to anchor to the present</div></div></div>
+  <div class="gc" onclick="go('s-breathing','4-7-8 breathing')"><div class="gi">💨</div><div><div class="gt">4-7-8 breathing</div><div class="gsb">In 4 · hold 7 · out 8 — slows everything down</div></div></div>
+  <div class="gc" onclick="go('s-pmr','Body scan')"><div class="gi">💪</div><div><div class="gt">Body scan (PMR)</div><div class="gsb">Tense and release each muscle group</div></div></div>
+  <div class="gc" onclick="go('s-postpone','Schedule worry time')"><div class="gi">🕐</div><div><div class="gt">Schedule worry time</div><div class="gsb">Set a time to worry later — then let it go for now</div></div></div>
+</div>
+
+<!-- 5-4-3-2-1 -->
+<div class="scr" id="s-54321">
+  <button class="back" onclick="stopSense();go('s-bench','The bench')">←</button>
+  <div class="tag tb">5-4-3-2-1 grounding</div>
+  <h2>Ground yourself</h2>
+  <div class="why-box">Your brain can't be in "what if" mode and notice real sensory detail at the same time. This pulls you back to right now.</div>
+  <div style="margin:4px 0 10px;">
+    <div class="snum" id="snum">5</div><div class="sico" id="sico">👁</div>
+    <div class="slbl" id="slbl">Things you can SEE</div>
+    <div class="spro" id="spro">Look around slowly. Name 5 things you can see right now.</div>
+  </div>
+  <div class="sdots" id="sdots"><div class="sd ac"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div></div>
+  <div class="tbar"><div class="tfill" id="stfill"></div></div>
+  <div style="font-size:10px;color:#9ab89a;text-align:center;margin-bottom:5px;">30s — tap when ready</div>
+  <button class="btn btn-p" onclick="nextSense()">Ready, next →</button>
+</div>
+
+<!-- 4-7-8 -->
+<div class="scr" id="s-breathing">
+  <button class="back" onclick="stopBreath();go('s-bench','The bench')">←</button>
+  <div class="tag tb">4-7-8 breathing</div>
+  <h2>Breathe with this</h2>
+  <div class="why-box">A longer out-breath than in-breath activates your parasympathetic nervous system — your body's natural calm response.</div>
+  <div class="bsv">
+    <svg width="136" height="136" viewBox="0 0 136 136" style="display:block;"><circle cx="68" cy="68" r="56" fill="none" stroke="#e0ede0" stroke-width="8"/><circle id="barc" cx="68" cy="68" r="56" fill="none" stroke="#2e7d5e" stroke-width="8" stroke-linecap="round" stroke-dasharray="351.9" stroke-dashoffset="351.9" transform="rotate(-90 68 68)"/></svg>
+    <div class="bin"><div class="bph" id="bph">Get ready</div><div class="bct" id="bct">4</div></div>
+  </div>
+  <div class="bir" id="bir">Breathe in through your nose</div>
+  <div class="bcl" id="bcl">Cycle 1 of 4</div>
+  <button class="btn btn-p" id="b-start" onclick="startBreath()">Start breathing</button>
+  <button class="btn-g" id="b-stop" style="display:none;" onclick="stopBreath();go('s-feeling','How do you feel?')">Done — how do I feel?</button>
+</div>
+
+<!-- PMR -->
+<div class="scr" id="s-pmr">
+  <button class="back" onclick="stopPMR();go('s-bench','The bench')">←</button>
+  <div class="tag tb">Body scan</div>
+  <h2>Release the tension</h2>
+  <div class="why-box">Tensing a muscle first makes it relax more deeply. Your body learns what "let go" actually feels like.</div>
+  <div style="text-align:center;margin-bottom:6px;">
+    <div class="pico" id="pico">🤲</div>
+    <div class="pprt" id="pprt">Your hands</div>
+    <div class="pins tn" id="pins">Squeeze your fists tight...</div>
+    <div class="pring"><svg width="72" height="72" viewBox="0 0 72 72" style="display:block;"><circle cx="36" cy="36" r="30" fill="none" stroke="#e0ede0" stroke-width="6"/><circle id="parc" cx="36" cy="36" r="30" fill="none" stroke="#c0392b" stroke-width="6" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5" transform="rotate(-90 36 36)"/></svg><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;color:#1a2e1a;" id="pct">5</div></div>
+  </div>
+  <div class="pdts" id="pdts"></div>
+  <button class="btn btn-p" id="pmr-start" onclick="startPMR()">Start body scan</button>
+  <button class="btn-g" id="pmr-skip" style="display:none;" onclick="stopPMR();go('s-feeling','How do you feel?')">Skip to — how do I feel?</button>
+</div>
+
+<!-- POSTPONE -->
+<div class="scr" id="s-postpone">
+  <button class="back" onclick="go('s-bench','The bench')">←</button>
+  <div class="tag tb">Schedule worry time</div>
+  <h2>Set a time to worry</h2>
+  <div class="why-box">Scheduling a specific "worry slot" later tells your brain: "we'll deal with this — just not now." Research shows it reduces worry outside that time.</div>
+  <p class="sub">Pick a 15-minute window and commit to letting this go until then.</p>
+  <div class="pt-opts">
+    <div class="pt-opt" onclick="pickTime(this,'This evening (6pm)')"><div class="pt-ico">🌆</div>This evening (6pm)</div>
+    <div class="pt-opt" onclick="pickTime(this,'Tonight before bed (9pm)')"><div class="pt-ico">🌙</div>Tonight before bed (9pm)</div>
+    <div class="pt-opt" onclick="pickTime(this,'Tomorrow morning (8am)')"><div class="pt-ico">☀️</div>Tomorrow morning (8am)</div>
+    <div class="pt-opt" onclick="pickTime(this,'A custom time')"><div class="pt-ico">🕐</div>Choose a different time</div>
+  </div>
+  <button class="btn btn-p" id="pt-btn" disabled onclick="go('s-gate','Leave the park')">Set worry time →</button>
+</div>
+
+<!-- FEELING -->
+<div class="scr" id="s-feeling">
+  <div style="text-align:center;margin:10px 0 8px;font-size:32px;">🌤</div>
+  <h2 style="text-align:center;">How do you feel now?</h2>
+  <p class="sub" style="text-align:center;">Be honest — no wrong answer.</p>
+  <div style="font-size:10px;color:#9ab89a;text-align:center;margin-bottom:4px;">Tap one</div>
+  <div class="frow">
+    <div class="fb2" onclick="pickFeel(this,true)">😰</div>
+    <div class="fb2" onclick="pickFeel(this,true)">😟</div>
+    <div class="fb2" onclick="pickFeel(this,false)">😐</div>
+    <div class="fb2" onclick="pickFeel(this,false)">🙂</div>
+    <div class="fb2" onclick="pickFeel(this,false)">😌</div>
+  </div>
+  <div class="support-box" id="support-box">
+    <div class="sup-title">That's okay — you don't have to feel better straight away.</div>
+    <div style="font-size:11px;color:#5a7a5a;margin-top:6px;padding-top:6px;border-top:0.5px solid #f0c0c0;">If you're really struggling:</div>
+    <div class="sup-link">Samaritans — 116 123 (free, 24/7)</div>
+    <div class="sup-link">NHS Every Mind Matters →</div>
+  </div>
+  <button class="btn btn-p" id="feel-btn" disabled onclick="lastPath='hyp';go('s-gate','Leave the park')">Leave the park →</button>
+  <div class="after-tech">
+    <button class="at-btn" onclick="go('s-bench','The bench')">🪑 Try another technique</button>
+    <button class="at-btn" onclick="go('s-home','Home')">🌳 Walk with another worry</button>
+  </div>
+</div>
+
+<!-- GATE -->
+<div class="scr" id="s-gate">
+  <div class="gs" id="gate-scene">
+    <div class="sky" style="position:absolute;top:0;left:0;right:0;height:88px;"></div><div class="sun" style="width:22px;height:22px;top:11px;right:14px;"></div>
+    <div class="gtop" style="bottom:56px;"></div><div class="gnd" style="height:62px;"></div><div class="pth" style="height:32px;"></div>
+    <div class="dl"></div>
+    <div class="tree" style="left:4px;bottom:48px;"><div class="cp" style="width:28px;height:32px;background:#4aaa4a;"></div><div class="tn"></div></div>
+    <div class="tree" style="right:6px;bottom:48px;"><div class="cp" style="width:26px;height:30px;background:#5aaa5a;"></div><div class="tn" style="height:16px;"></div></div>
+    <div class="gw"><div class="gp l"></div><div class="gp r"></div><div class="gtb"></div><div class="gpn l"><div class="grl" style="top:6px;"></div><div class="grl" style="top:14px;"></div><div class="grl" style="top:21px;"></div></div><div class="gpn r"><div class="grl" style="top:6px;"></div><div class="grl" style="top:14px;"></div><div class="grl" style="top:21px;"></div></div><div class="glt"></div></div>
+    <div class="gwalker"><div class="gbob"><div class="sfig"><div class="bh"></div><div class="fb" style="background:#3a7a5a;margin:1px auto 0;"></div><div class="gfa al" style="background:#3a7a5a;"></div><div class="gfa ar" style="background:#3a7a5a;"></div><div class="gfl ll" style="background:#2a5a3a;"></div><div class="gfl lr" style="background:#2a5a3a;"></div></div></div></div>
+    <div class="pkc"><div style="font-size:12px;font-weight:700;color:#1a2e1a;" id="gate-title">You did it.</div><div style="font-size:10px;color:#5a7a5a;margin-top:2px;" id="gate-sub">The gate is closed.</div></div>
+  </div>
+  <div class="gate-postpone" id="gate-postpone-box" style="display:none;">
+    <div class="gp-ico">🕐</div>
+    <div class="gp-time" id="gp-time-label">Worry time set.</div>
+    <div class="gp-msg">Let your worries go until then. They'll be right here waiting — but <em>you</em> don't need to carry them right now.<br><br>Come back and use another technique whenever you feel like it. 🌳</div>
+  </div>
+  <div id="gate-std-msg" style="text-align:center;margin:8px 0 12px;">
+    <div style="font-size:16px;font-weight:700;color:#1a2e1a;" id="gate-headline">You walked through it.</div>
+    <div style="font-size:12px;color:#5a7a5a;margin-top:3px;" id="gate-body">It's in the park now.</div>
+  </div>
+  <button class="btn btn-p" onclick="go('s-home','Home')">Walk with another worry 🌳</button>
+  <button class="btn-outline" id="gate-technique-btn" style="display:none;" onclick="go('s-bench','The bench')">🪑 Use a calming technique</button>
+  <button class="btn-g" onclick="go('s-parked','My parked worries')">See my parked worries</button>
+</div>
+
+<!-- PARKED WORRIES -->
+<div class="scr" id="s-parked">
+  <button class="back" onclick="go('s-gate','Leave the park')">←</button>
+  <div style="font-size:17px;font-weight:700;color:#1a2e1a;margin-bottom:3px;">Parked worries 🌳</div>
+  <div style="font-size:11px;color:#5a7a5a;margin-bottom:10px;">Everything you've walked through and left here.</div>
+  <div class="pw-board"><div class="pw-inner">
+    <div class="pw-title">📋 Worry Park — Parked Worries</div>
+    <div class="pw-grid" id="pw-grid"></div>
+  </div></div>
+  <div class="pw-footer">
+    <button class="at-btn" onclick="go('s-home','Home')">🌳 Walk with another worry</button>
+    <button class="at-btn leave" onclick="go('s-leaving','Leaving')">👋 Leave the park</button>
+  </div>
+</div>
+
+<!-- LEAVING -->
+<div class="scr" id="s-leaving">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 0;">
+    <div style="font-size:48px;margin-bottom:12px;">🌳</div>
+    <div style="font-size:19px;font-weight:700;color:#1a2e1a;margin-bottom:6px;">See you next time.</div>
+    <div style="font-size:12px;color:#5a7a5a;line-height:1.6;max-width:220px;">You did good today.<br>The park is always here when you need it.</div>
+  </div>
+  <button class="btn btn-p" onclick="go('s-home','Home')">Back to the park</button>
+</div>
+
+</div></div>
+
+<script>
+var CIRC_B=351.9,CIRC_P=188.5,CIRC_HB=138.2;
+var lastPath='hyp',bPicked=[],chosenOption='',worryTime='';
+var parkedWorries=JSON.parse(localStorage.getItem('wp-worries')||'[]');
+var HB=[{phase:'Breathe in...',instr:'Smell the fresh park air. Let it right in.',dur:4,ct:'in',col:'#2e7d5e'},{phase:'Hold...',instr:"Just for a moment. You're safe here.",dur:2,ct:'hold',col:'#8b5cf6'},{phase:'Breathe out...',instr:"Let it all go. The worry can wait.",dur:4,ct:'out',col:'#5a9ab8'}];
+var hbBreath=0,hbPh=0,hbT=null,hbOn=false;
+function startHomeBreath(){hbOn=true;hbBreath=0;hbPh=0;runHB();}
+function runHB(){if(!hbOn)return;var p=HB[hbPh];document.getElementById('hb-phase').textContent=p.phase;document.getElementById('hb-instr').textContent=p.instr;document.getElementById('hb-ct').textContent=p.ct;var arc=document.getElementById('hbarc');arc.style.stroke=p.col;arc.style.transition='none';arc.style.strokeDashoffset=CIRC_HB;setTimeout(function(){arc.style.transition='stroke-dashoffset '+p.dur+'s linear';arc.style.strokeDashoffset=0;},30);clearTimeout(hbT);hbT=setTimeout(function(){hbPh++;if(hbPh>=HB.length){hbPh=0;hbBreath++;updateHBDots();}if(hbBreath>=3){doneBreath();return;}runHB();},p.dur*1000);}
+function updateHBDots(){var dots=document.querySelectorAll('.hb-dot');dots.forEach(function(d,i){d.className='hb-dot'+(i<hbBreath?' done':i===hbBreath?' active':'');});}
+function doneBreath(){hbOn=false;clearTimeout(hbT);document.getElementById('hb-active').style.display='none';document.getElementById('hb-done').style.display='block';}
+function readyBreath(){hbOn=false;clearTimeout(hbT);doneBreath();}
+function resetHomeBreath(){hbOn=false;clearTimeout(hbT);hbBreath=0;hbPh=0;document.getElementById('hb-active').style.display='block';document.getElementById('hb-done').style.display='none';var dots=document.querySelectorAll('.hb-dot');dots.forEach(function(d,i){d.className='hb-dot'+(i===0?' active':'');});var arc=document.getElementById('hbarc');arc.style.transition='none';arc.style.strokeDashoffset=CIRC_HB;document.getElementById('hb-phase').textContent='Breathe in...';document.getElementById('hb-instr').textContent='Smell the fresh park air. Let it right in.';document.getElementById('hb-ct').textContent='in';}
+function go(id,label){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.getElementById('bc').textContent=label||id;if(id==='s-home'){fullReset();resetHomeBreath();setTimeout(startHomeBreath,400);}if(id==='s-classifier')resetClassifier();if(id==='s-bench')resetBench();if(id==='s-54321'){senseIdx=0;showSense(0);}if(id==='s-proscons')buildPC();if(id==='s-feeling')resetFeeling();if(id==='s-gate'){parkCurrentWorry();replayGate();updateGateMessages();}if(id==='s-parked')renderParked();}
+function parkCurrentWorry(){var txt=document.getElementById('home-ta').value.trim();if(!txt)return;var now=new Date();var ds=now.toLocaleDateString('en-GB',{day:'numeric',month:'short'});parkedWorries.unshift({text:txt,date:ds,path:lastPath});if(parkedWorries.length>8)parkedWorries.pop();localStorage.setItem('wp-worries',JSON.stringify(parkedWorries));}
+function renderParked(){var grid=document.getElementById('pw-grid');grid.innerHTML='';if(!parkedWorries.length){grid.innerHTML='<div class="pw-empty" style="grid-column:span 2;">Nothing parked yet. Complete a walk to see your worries here.</div>';return;}var cols=['pw-nc0','pw-nc1','pw-nc2','pw-nc3','pw-nc4'];var rots=['rotate(-1.5deg)','rotate(1.8deg)','rotate(-2.5deg)','rotate(.8deg)','rotate(2deg)'];var pathLabel={'practical':'✅ Planned','postpone':'🕐 Scheduled','hyp':'🌳 Parked'};parkedWorries.forEach(function(w,i){var note=document.createElement('div');note.className='pw-note '+cols[i%cols.length];note.style.transform=rots[i%rots.length];var snippet=w.text.length>60?w.text.slice(0,60)+'…':w.text;note.innerHTML='<div class="pw-note-date">'+w.date+'</div><div class="pw-note-path">'+(pathLabel[w.path]||'🌳 Parked')+'</div>'+snippet;grid.appendChild(note);});}
+function updateGateMessages(){var pbox=document.getElementById('gate-postpone-box');var stdmsg=document.getElementById('gate-std-msg');var techBtn=document.getElementById('gate-technique-btn');techBtn.style.display=lastPath==='practical'?'block':'none';if(lastPath==='postpone'){pbox.style.display='block';stdmsg.style.display='none';document.getElementById('gp-time-label').textContent='Worry time set — '+worryTime+'.';document.getElementById('gate-title').textContent='Scheduled.';document.getElementById('gate-sub').textContent=worryTime+' — see you then.';}else{pbox.style.display='none';stdmsg.style.display='block';if(lastPath==='practical'){document.getElementById('gate-headline').textContent='Step planned.';document.getElementById('gate-body').textContent="The worry's done its job. Let it go.";document.getElementById('gate-title').textContent='Step planned.';document.getElementById('gate-sub').textContent='You can let this rest now.';}else{document.getElementById('gate-headline').textContent='You walked through it.';document.getElementById('gate-body').textContent="It's in the park now.";document.getElementById('gate-title').textContent='Parked. 🌳';document.getElementById('gate-sub').textContent="The gate's closed behind you.";}}}
+function replayGate(){var old=document.getElementById('gate-scene');if(!old)return;var fresh=old.cloneNode(true);fresh.id='gate-scene';old.parentNode.replaceChild(fresh,old);}
+function fullReset(){qVals={};bPicked=[];chosenOption='';worryTime='';lastPath='hyp';document.querySelectorAll('.qb').forEach(function(b){b.style.background='white';b.style.borderColor='#b8d4b8';b.style.color='#1a2e1a';});document.getElementById('q-btn').disabled=true;document.getElementById('prac-badge').style.display='none';document.getElementById('bench-badge').style.display='none';document.getElementById('p-prac').className='pcard';document.getElementById('p-bench').className='pcard';document.getElementById('path-txt').textContent='Both paths are open.';document.querySelectorAll('.bta').forEach(function(ta){ta.value='';});document.querySelectorAll('#s-board .nt').forEach(function(n){n.classList.remove('sel','fdd','ht');});document.getElementById('brd-btn').disabled=true;document.getElementById('brd-hint').textContent='Tap up to 2 notices';document.querySelectorAll('.pt-opt').forEach(function(o){o.classList.remove('chosen');});document.getElementById('pt-btn').disabled=true;document.getElementById('step-ta').value='';document.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('ac');});document.getElementById('home-ta').value='';resetFeeling();}
+function resetClassifier(){qVals={};document.querySelectorAll('.qb').forEach(function(b){b.style.background='white';b.style.borderColor='#b8d4b8';b.style.color='#1a2e1a';});document.getElementById('q-btn').disabled=true;}
+function resetBench(){var s=document.getElementById('bench-scene');var c=s.cloneNode(true);c.id='bench-scene';s.parentNode.replaceChild(c,s);}
+function resetFeeling(){document.querySelectorAll('.fb2').forEach(function(b){b.classList.remove('ac');});document.getElementById('support-box').classList.remove('show');var fb=document.getElementById('feel-btn');fb.style.display='block';fb.disabled=true;}
+var qVals={};
+function qp(el,val,q){el.parentNode.querySelectorAll('.qb').forEach(function(b){b.style.background='white';b.style.borderColor='#b8d4b8';b.style.color='#1a2e1a';});var p=(val==='yes'||val==='real');el.style.background=p?'#d4edda':'#fdebc8';el.style.borderColor=p?'#2e7d5e':'#c8a000';el.style.color=p?'#1e5c35':'#7a4f00';qVals[q]=val;if(Object.keys(qVals).length>=3){document.getElementById('q-btn').disabled=false;var yc=Object.values(qVals).filter(function(v){return v==='yes'||v==='real';}).length;var pr=yc>=2;document.getElementById('prac-badge').style.display=pr?'block':'none';document.getElementById('bench-badge').style.display=!pr?'block':'none';document.getElementById('p-prac').className='pcard'+(pr?' sug':'');document.getElementById('p-bench').className='pcard'+(!pr?' sug':'');document.getElementById('path-txt').textContent=pr?"Looks like this is something you can act on — but both paths are open.":"This looks more like a 'what if' — but both paths are open.";}}
+function npk(el){if(bPicked.length>=2&&!el.classList.contains('sel'))return;var key=el.innerText.replace('✓','').trim().slice(0,30);if(el.classList.contains('sel')){el.classList.remove('sel');bPicked=bPicked.filter(function(p){return p!==key;});}else{el.classList.add('sel');bPicked.push(key);}updateBrd();}
+['nb0','nb1','nb2','nb3','nb4'].forEach(function(id){var card=document.getElementById(id);if(!card)return;var ta=card.querySelector('.bta');ta.addEventListener('input',function(){card.classList.toggle('ht',ta.value.trim().length>0);if(!ta.value.trim()){card.classList.remove('sel');bPicked=bPicked.filter(function(p){return p!==id;});updateBrd();}});card.addEventListener('click',function(e){if(e.target===ta)return;if(!card.classList.contains('ht'))return;if(bPicked.length>=2&&!card.classList.contains('sel'))return;if(card.classList.contains('sel')){card.classList.remove('sel');bPicked=bPicked.filter(function(p){return p!==id;});}else{card.classList.add('sel');bPicked.push(id);}updateBrd();});ta.addEventListener('blur',function(){if(!ta.value.trim()||card.classList.contains('sel')||bPicked.length>=2)return;card.classList.add('sel');bPicked.push(id);updateBrd();});});
+function updateBrd(){var c=bPicked.length;document.getElementById('brd-btn').disabled=c<2;document.getElementById('brd-hint').textContent=c===0?'Tap up to 2 notices':c===1?'1 picked — one more':'2 picked — ready';document.querySelectorAll('#s-board .nt').forEach(function(n){if(!n.classList.contains('sel'))n.classList.toggle('fdd',c>=2);});}
+function getLabel(key){if(['nb0','nb1','nb2','nb3','nb4'].indexOf(key)>=0){var ta=document.querySelector('#'+key+' .bta');return ta?ta.value.trim():key;}return key;}
+function buildPC(){var pair=document.getElementById('pc-pair');pair.innerHTML='';document.getElementById('pc-btn').disabled=true;bPicked.slice(0,2).forEach(function(key,i){var label=getLabel(key)||('Option '+(i+1));var card=document.createElement('div');card.className='pc-opt';card.innerHTML='<div class="pc-chosen-badge">Going with this</div><div class="pc-name">'+label+'</div><div class="pc-sec pc-for"><div class="pc-head">For</div><textarea class="pc-field" rows="2" placeholder="why this works..."></textarea></div><div class="pc-sec pc-ag"><div class="pc-head">Against</div><textarea class="pc-field" rows="2" placeholder="any downsides..."></textarea></div>';card.onclick=function(e){if(e.target.tagName==='TEXTAREA')return;document.querySelectorAll('.pc-opt').forEach(function(c){c.classList.remove('chosen','faded');});card.classList.add('chosen');document.querySelectorAll('.pc-opt').forEach(function(c){if(c!==card)c.classList.add('faded');});chosenOption=label;document.getElementById('pc-btn').disabled=false;};pair.appendChild(card);});}
+function setSb(el){document.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('ac');});el.classList.add('ac');}
+var SENSES=[{n:5,ico:'👁',lbl:'Things you can SEE',pro:'Look around slowly. Name 5 things you can see right now.'},{n:4,ico:'👂',lbl:'Things you can HEAR',pro:'Go quiet. Name 4 sounds — near and far.'},{n:3,ico:'🤚',lbl:'Things you can TOUCH',pro:'Notice textures. Name 3 things you can feel.'},{n:2,ico:'👃',lbl:'Things you can SMELL',pro:'Breathe in. Name 2 smells — real or remembered.'},{n:1,ico:'👅',lbl:'Thing you can TASTE',pro:'Notice your mouth. One taste or sensation.'}];
+var senseIdx=0,sTH=null;
+function showSense(i){if(i>=SENSES.length){stopSense();go('s-feeling','How do you feel?');return;}var s=SENSES[i];document.getElementById('snum').textContent=s.n;document.getElementById('sico').textContent=s.ico;document.getElementById('slbl').textContent=s.lbl;document.getElementById('spro').textContent=s.pro;var dots=document.querySelectorAll('.sd');dots.forEach(function(d,j){d.className='sd'+(j<i?' dn':j===i?' ac':'');});var fill=document.getElementById('stfill');fill.style.transition='none';fill.style.width='100%';setTimeout(function(){fill.style.transition='width 30s linear';fill.style.width='0%';},50);clearTimeout(sTH);sTH=setTimeout(function(){nextSense();},30000);}
+function nextSense(){clearTimeout(sTH);senseIdx++;showSense(senseIdx);}
+function stopSense(){clearTimeout(sTH);senseIdx=0;}
+var PHASES=[{lbl:'Breathe in',ins:'Slowly in through your nose',dur:4,col:'#3b82f6'},{lbl:'Hold',ins:'Hold gently — stay still',dur:7,col:'#8b5cf6'},{lbl:'Breathe out',ins:'Slowly out through your mouth',dur:8,col:'#2e7d5e'}];
+var bTimer=null,bCycle=0,bPhase=0,bRunning=false;
+function startBreath(){bRunning=true;bCycle=0;bPhase=0;document.getElementById('b-start').style.display='none';document.getElementById('b-stop').style.display='block';runBPhase();}
+function runBPhase(){if(!bRunning)return;var p=PHASES[bPhase];var arc=document.getElementById('barc');arc.style.stroke=p.col;document.getElementById('bph').textContent=p.lbl;document.getElementById('bir').textContent=p.ins;document.getElementById('bcl').textContent='Cycle '+(bCycle+1)+' of 4';arc.style.transition='none';arc.style.strokeDashoffset=CIRC_B;setTimeout(function(){arc.style.transition='stroke-dashoffset '+p.dur+'s linear';arc.style.strokeDashoffset=0;},50);var c=p.dur;document.getElementById('bct').textContent=c;clearInterval(bTimer);bTimer=setInterval(function(){c--;document.getElementById('bct').textContent=c;if(c<=0){clearInterval(bTimer);bPhase++;if(bPhase>=PHASES.length){bPhase=0;bCycle++;}if(bCycle>=4){stopBreath();go('s-feeling','How do you feel?');return;}setTimeout(runBPhase,300);}},1000);}
+function stopBreath(){bRunning=false;clearInterval(bTimer);document.getElementById('b-start').style.display='block';document.getElementById('b-stop').style.display='none';var arc=document.getElementById('barc');arc.style.transition='none';arc.style.strokeDashoffset=CIRC_B;document.getElementById('bph').textContent='Get ready';document.getElementById('bct').textContent='4';document.getElementById('bcl').textContent='Cycle 1 of 4';}
+var PMR=[{ico:'🤲',pt:'Your hands',tn:'Squeeze your fists tight...',rl:'...and let go completely'},{ico:'💪',pt:'Your arms',tn:'Tense your whole arm...',rl:'...and release, feel the warmth'},{ico:'🙆',pt:'Your shoulders',tn:'Shrug up to your ears...',rl:'...and drop them right down'},{ico:'😬',pt:'Your jaw',tn:'Clench your teeth gently...',rl:'...and let your mouth fall open'},{ico:'🫁',pt:'Your belly',tn:'Tighten your stomach...',rl:'...and breathe it all out'},{ico:'🦵',pt:'Your legs',tn:'Press your thighs together...',rl:'...and let them go soft'},{ico:'🦶',pt:'Your feet',tn:'Curl your toes tight...',rl:'...and spread them wide'}];
+var pIdx=0,pPhase='tn',pTimer=null,pRunning=false;
+function buildPDots(){var p=document.getElementById('pdts');p.innerHTML='';PMR.forEach(function(){var d=document.createElement('div');d.className='pd';p.appendChild(d);});}
+function startPMR(){pRunning=true;pIdx=0;pPhase='tn';buildPDots();document.getElementById('pmr-start').style.display='none';document.getElementById('pmr-skip').style.display='block';runPPhase();}
+function runPPhase(){if(!pRunning)return;var pt=PMR[pIdx];document.getElementById('pico').textContent=pt.ico;document.getElementById('pprt').textContent=pt.pt;var ins=document.getElementById('pins');ins.textContent=pPhase==='tn'?pt.tn:pt.rl;ins.className='pins '+(pPhase==='tn'?'tn':'rl');var arc=document.getElementById('parc');arc.style.stroke=pPhase==='tn'?'#c0392b':'#2e7d5e';arc.style.transition='none';arc.style.strokeDashoffset=CIRC_P;setTimeout(function(){arc.style.transition='stroke-dashoffset 5s linear';arc.style.strokeDashoffset=0;},50);var c=5;document.getElementById('pct').textContent=c;clearInterval(pTimer);pTimer=setInterval(function(){c--;document.getElementById('pct').textContent=c;if(c<=0){clearInterval(pTimer);if(pPhase==='tn'){pPhase='rl';setTimeout(runPPhase,200);}else{var dots=document.querySelectorAll('.pd');if(dots[pIdx])dots[pIdx].classList.add('dn');pIdx++;pPhase='tn';if(pIdx>=PMR.length){stopPMR();go('s-feeling','How do you feel?');return;}setTimeout(runPPhase,400);}}},1000);}
+function stopPMR(){pRunning=false;clearInterval(pTimer);document.getElementById('pmr-start').style.display='block';document.getElementById('pmr-skip').style.display='none';pIdx=0;pPhase='tn';buildPDots();var pt=PMR[0];document.getElementById('pico').textContent=pt.ico;document.getElementById('pprt').textContent=pt.pt;document.getElementById('pins').textContent=pt.tn;document.getElementById('pins').className='pins tn';document.getElementById('pct').textContent='5';var arc=document.getElementById('parc');arc.style.transition='none';arc.style.strokeDashoffset=CIRC_P;}
+function pickTime(el,time){document.querySelectorAll('.pt-opt').forEach(function(o){o.classList.remove('chosen');});el.classList.add('chosen');worryTime=time;lastPath='postpone';document.getElementById('pt-btn').disabled=false;}
+function pickFeel(el,distressed){document.querySelectorAll('.fb2').forEach(function(b){b.classList.remove('ac');});el.classList.add('ac');var sb=document.getElementById('support-box');var fb=document.getElementById('feel-btn');if(distressed){sb.classList.add('show');fb.style.display='none';}else{sb.classList.remove('show');fb.style.display='block';fb.disabled=false;}}
+buildPDots();
+setTimeout(startHomeBreath,400);
+</script>
+</body>
+</html>
