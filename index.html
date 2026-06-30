@@ -8,9 +8,9 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Nunito',sans-serif;background:#e8f0e8;height:100vh;display:flex;align-items:center;justify-content:center;padding:0;overflow:hidden;}
-.wrap{width:300px;}
+.wrap{width:min(390px,100vw);}
 .bc{font-size:10px;color:#888;text-align:center;margin-bottom:6px;min-height:14px;}
-.phone{width:300px;height:min(590px,calc(100vh - 36px));border-radius:34px;border:2.5px solid #ccc;background:#f7f5f0;overflow:hidden;position:relative;}
+.phone{width:100%;height:min(780px,calc(100vh - 24px));border-radius:44px;border:3px solid #bbb;background:#f7f5f0;overflow:hidden;position:relative;}
 .pbar{height:26px;background:#f7f5f0;display:flex;align-items:center;justify-content:center;}
 .notch{width:56px;height:4px;border-radius:2px;background:#ccc;}
 .scr{position:absolute;inset:26px 0 0 0;display:flex;flex-direction:column;padding:14px 13px 18px;background:#f7f5f0;opacity:0;pointer-events:none;transition:opacity .25s;overflow-y:auto;overflow-x:hidden;}
@@ -167,7 +167,7 @@ p.sub{font-size:12px;color:#5a7a5a;line-height:1.5;margin-bottom:10px;}
 .bcl{font-size:10px;color:#9ab89a;text-align:center;margin-bottom:5px;}
 .pico{font-size:30px;text-align:center;margin-bottom:4px;}
 .pprt{font-size:15px;font-weight:700;color:#1a2e1a;text-align:center;margin-bottom:6px;}
-.pins{font-size:13px;font-weight:700;text-align:center;margin-bottom:10px;transition:color .3s;line-height:1.4;}
+.pins{font-size:13px;font-weight:700;text-align:center;margin-bottom:14px;transition:color .3s;line-height:1.4;min-height:38px;}
 .pins.tn{color:#c0392b;}.pins.rl{color:#2e7d5e;}
 .pring{position:relative;width:72px;height:72px;margin:0 auto 6px;}
 .pdts{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-bottom:7px;}
@@ -239,7 +239,7 @@ p.sub{font-size:12px;color:#5a7a5a;line-height:1.5;margin-bottom:10px;}
 <div class="wrap">
 <div class="bc" id="bc">Home</div>
 <div class="phone">
-<div class="pbar"><div class="notch"></div></div>
+<div class="pbar"><div class="notch"></div><button id="music-btn" onclick="toggleMusic()" style="position:absolute;right:14px;top:4px;background:none;border:none;font-size:14px;cursor:pointer;padding:2px 4px;color:#5a7a5a;line-height:1;" title="Toggle sound">🔊</button></div>
 
 <!-- HOME -->
 <div class="scr active" id="s-home">
@@ -257,7 +257,7 @@ p.sub{font-size:12px;color:#5a7a5a;line-height:1.5;margin-bottom:10px;}
         <div class="hb-ring"><svg width="54" height="54" viewBox="0 0 54 54"><circle cx="27" cy="27" r="22" fill="none" stroke="#c8e8c8" stroke-width="5"/><circle id="hbarc" cx="27" cy="27" r="22" fill="none" stroke="#2e7d5e" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 27 27)"/></svg><div class="hb-inner" id="hb-ct">in</div></div>
         <div class="hb-text"><div class="hb-phase" id="hb-phase">Breathe in...</div><div class="hb-instr" id="hb-instr">Smell the fresh park air. Let it right in.</div></div>
       </div>
-      <div class="hb-dots" id="hb-dots"><div class="hb-dot active"></div><div class="hb-dot"></div><div class="hb-dot"></div></div>
+      <div class="hb-dots" id="hb-dots"><div class="hb-dot active"></div><div class="hb-dot"></div></div>
       <button class="hb-ready" onclick="readyBreath()">ready →</button>
     </div>
     <div class="hb-done" id="hb-done"><div class="hb-done-txt">🌤 That's better.</div><div class="hb-done-sub">Now — what's on your mind?</div></div>
@@ -307,15 +307,11 @@ p.sub{font-size:12px;color:#5a7a5a;line-height:1.5;margin-bottom:10px;}
   <div class="bf"><div class="bi">
     <div class="btb">📋 Worry Park — Community Noticeboard</div>
     <div class="ng2">
-      <div class="nt blk r2" id="nb0"><div class="blbl">Option 1</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
-      <div class="nt blk r5" id="nb1"><div class="blbl">Option 2</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
-      <div class="nt blk r1" id="nb2"><div class="blbl">Option 3</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
+      <div class="nt blk r2" id="nb0"><div class="blbl">Option 1</div><textarea class="bta" rows="4" placeholder="type here..."></textarea><div class="tk">✓</div></div>
+      <div class="nt blk r5" id="nb1"><div class="blbl">Option 2</div><textarea class="bta" rows="4" placeholder="type here..."></textarea><div class="tk">✓</div></div>
+      <div class="nt blk r1" id="nb2"><div class="blbl">Option 3</div><textarea class="bta" rows="4" placeholder="type here..."></textarea><div class="tk">✓</div></div>
       <div class="nt ngr r3" onclick="npk(this)"><div class="tk">✓</div><div class="nem">🌱</div>You've handled hard things before</div>
-      <div class="nt nwh r6 tpd wd" onclick="npk(this)"><div class="tk">✓</div><div class="nlb">park rules</div>Rule 1: Be kind to yourself. Rule 2: See rule 1.</div>
-      <div class="nt blk r4" id="nb3"><div class="blbl">Option 4</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
       <div class="nt npk r7" onclick="npk(this)"><div class="tk">✓</div>It's okay not to know yet</div>
-      <div class="nt blk r8" id="nb4"><div class="blbl">Option 5</div><textarea class="bta" rows="3" placeholder="type here..."></textarea><div class="tk">✓</div></div>
-      <div class="nt nbl r2" onclick="npk(this)"><div class="tk">✓</div><div class="nlb">forecast</div><div class="nem">🌤</div>Today: manageable</div>
       <div class="nt nyl r6" onclick="npk(this)"><div class="tk">✓</div><div class="nem">💪</div>Progress, not perfection</div>
     </div>
   </div></div>
@@ -483,6 +479,7 @@ p.sub{font-size:12px;color:#5a7a5a;line-height:1.5;margin-bottom:10px;}
     <div style="font-size:16px;font-weight:700;color:#1a2e1a;" id="gate-headline">You walked through it.</div>
     <div style="font-size:12px;color:#5a7a5a;margin-top:3px;" id="gate-body">It's in the park now.</div>
   </div>
+  <div style="font-size:13px;font-weight:700;color:#2e7d5e;text-align:center;margin:6px 0 4px;" id="gate-letgo">You can now let it go.</div>
   <button class="btn btn-p" onclick="go('s-home','Home')">Walk with another worry 🌳</button>
   <button class="btn-outline" id="gate-technique-btn" style="display:none;" onclick="go('s-bench','The bench')">🪑 Use a calming technique</button>
   <button class="btn-g" onclick="go('s-parked','My parked worries')">See my parked worries</button>
@@ -510,7 +507,8 @@ p.sub{font-size:12px;color:#5a7a5a;line-height:1.5;margin-bottom:10px;}
     <div style="font-size:19px;font-weight:700;color:#1a2e1a;margin-bottom:6px;">See you next time.</div>
     <div style="font-size:12px;color:#5a7a5a;line-height:1.6;max-width:220px;">You did good today.<br>The park is always here when you need it.</div>
   </div>
-  <button class="btn btn-p" onclick="go('s-home','Home')">Back to the park</button>
+  <button class="btn btn-p" onclick="go('s-home','Home')">🌳 Walk with another worry</button>
+  <button class="btn-g" onclick="go('s-home','Home')">Back to the park</button>
 </div>
 
 </div></div>
@@ -519,10 +517,10 @@ p.sub{font-size:12px;color:#5a7a5a;line-height:1.5;margin-bottom:10px;}
 var CIRC_B=351.9,CIRC_P=188.5,CIRC_HB=138.2;
 var lastPath='hyp',bPicked=[],chosenOption='',worryTime='';
 var parkedWorries=JSON.parse(localStorage.getItem('wp-worries')||'[]');
-var HB=[{phase:'Breathe in...',instr:'Smell the fresh park air. Let it right in.',dur:4,ct:'in',col:'#2e7d5e'},{phase:'Hold...',instr:"Just for a moment. You're safe here.",dur:2,ct:'hold',col:'#8b5cf6'},{phase:'Breathe out...',instr:"Let it all go. The worry can wait.",dur:4,ct:'out',col:'#5a9ab8'}];
+var HB=[{phase:'Breathe in...',instr:'Smell the fresh park air. Let it right in.',dur:4,ct:'in',col:'#2e7d5e'},{phase:'Breathe out...',instr:"Let it all go. The worry can wait.",dur:5,ct:'out',col:'#5a9ab8'}];
 var hbBreath=0,hbPh=0,hbT=null,hbOn=false;
 function startHomeBreath(){hbOn=true;hbBreath=0;hbPh=0;runHB();}
-function runHB(){if(!hbOn)return;var p=HB[hbPh];document.getElementById('hb-phase').textContent=p.phase;document.getElementById('hb-instr').textContent=p.instr;document.getElementById('hb-ct').textContent=p.ct;var arc=document.getElementById('hbarc');arc.style.stroke=p.col;arc.style.transition='none';arc.style.strokeDashoffset=CIRC_HB;setTimeout(function(){arc.style.transition='stroke-dashoffset '+p.dur+'s linear';arc.style.strokeDashoffset=0;},30);clearTimeout(hbT);hbT=setTimeout(function(){hbPh++;if(hbPh>=HB.length){hbPh=0;hbBreath++;updateHBDots();}if(hbBreath>=3){doneBreath();return;}runHB();},p.dur*1000);}
+function runHB(){if(!hbOn)return;var p=HB[hbPh];document.getElementById('hb-phase').textContent=p.phase;document.getElementById('hb-instr').textContent=p.instr;document.getElementById('hb-ct').textContent=p.ct;var arc=document.getElementById('hbarc');arc.style.stroke=p.col;arc.style.transition='none';arc.style.strokeDashoffset=CIRC_HB;setTimeout(function(){arc.style.transition='stroke-dashoffset '+p.dur+'s linear';arc.style.strokeDashoffset=0;},30);var dots=document.querySelectorAll('.hb-dot');dots.forEach(function(d,i){d.className='hb-dot'+(i<hbPh?' done':i===hbPh?' active':'');});clearTimeout(hbT);hbT=setTimeout(function(){hbPh++;if(hbPh>=HB.length){hbPh=0;hbBreath++;if(hbBreath>=1){doneBreath();return;}}runHB();},p.dur*1000);}
 function updateHBDots(){var dots=document.querySelectorAll('.hb-dot');dots.forEach(function(d,i){d.className='hb-dot'+(i<hbBreath?' done':i===hbBreath?' active':'');});}
 function doneBreath(){hbOn=false;clearTimeout(hbT);document.getElementById('hb-active').style.display='none';document.getElementById('hb-done').style.display='block';}
 function readyBreath(){hbOn=false;clearTimeout(hbT);doneBreath();}
@@ -530,7 +528,7 @@ function resetHomeBreath(){hbOn=false;clearTimeout(hbT);hbBreath=0;hbPh=0;docume
 function go(id,label){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');document.getElementById('bc').textContent=label||id;if(id==='s-home'){fullReset();resetHomeBreath();setTimeout(startHomeBreath,400);}if(id==='s-classifier')resetClassifier();if(id==='s-bench')resetBench();if(id==='s-54321'){senseIdx=0;showSense(0);}if(id==='s-proscons')buildPC();if(id==='s-feeling')resetFeeling();if(id==='s-gate'){parkCurrentWorry();replayGate();updateGateMessages();}if(id==='s-parked')renderParked();}
 function parkCurrentWorry(){var txt=document.getElementById('home-ta').value.trim();if(!txt)return;var now=new Date();var ds=now.toLocaleDateString('en-GB',{day:'numeric',month:'short'});parkedWorries.unshift({text:txt,date:ds,path:lastPath});if(parkedWorries.length>8)parkedWorries.pop();localStorage.setItem('wp-worries',JSON.stringify(parkedWorries));}
 function renderParked(){var grid=document.getElementById('pw-grid');grid.innerHTML='';if(!parkedWorries.length){grid.innerHTML='<div class="pw-empty" style="grid-column:span 2;">Nothing parked yet. Complete a walk to see your worries here.</div>';return;}var cols=['pw-nc0','pw-nc1','pw-nc2','pw-nc3','pw-nc4'];var rots=['rotate(-1.5deg)','rotate(1.8deg)','rotate(-2.5deg)','rotate(.8deg)','rotate(2deg)'];var pathLabel={'practical':'✅ Planned','postpone':'🕐 Scheduled','hyp':'🌳 Parked'};parkedWorries.forEach(function(w,i){var note=document.createElement('div');note.className='pw-note '+cols[i%cols.length];note.style.transform=rots[i%rots.length];var snippet=w.text.length>60?w.text.slice(0,60)+'…':w.text;note.innerHTML='<div class="pw-note-date">'+w.date+'</div><div class="pw-note-path">'+(pathLabel[w.path]||'🌳 Parked')+'</div>'+snippet;grid.appendChild(note);});}
-function updateGateMessages(){var pbox=document.getElementById('gate-postpone-box');var stdmsg=document.getElementById('gate-std-msg');var techBtn=document.getElementById('gate-technique-btn');techBtn.style.display=lastPath==='practical'?'block':'none';if(lastPath==='postpone'){pbox.style.display='block';stdmsg.style.display='none';document.getElementById('gp-time-label').textContent='Worry time set — '+worryTime+'.';document.getElementById('gate-title').textContent='Scheduled.';document.getElementById('gate-sub').textContent=worryTime+' — see you then.';}else{pbox.style.display='none';stdmsg.style.display='block';if(lastPath==='practical'){document.getElementById('gate-headline').textContent='Step planned.';document.getElementById('gate-body').textContent="The worry's done its job. Let it go.";document.getElementById('gate-title').textContent='Step planned.';document.getElementById('gate-sub').textContent='You can let this rest now.';}else{document.getElementById('gate-headline').textContent='You walked through it.';document.getElementById('gate-body').textContent="It's in the park now.";document.getElementById('gate-title').textContent='Parked. 🌳';document.getElementById('gate-sub').textContent="The gate's closed behind you.";}}}
+function updateGateMessages(){var pbox=document.getElementById('gate-postpone-box');var stdmsg=document.getElementById('gate-std-msg');var techBtn=document.getElementById('gate-technique-btn');techBtn.style.display=lastPath==='practical'?'block':'none';document.getElementById('gate-letgo').textContent='You can now let it go.';if(lastPath==='postpone'){pbox.style.display='block';stdmsg.style.display='none';document.getElementById('gp-time-label').textContent='Worry time set — '+worryTime+'.';document.getElementById('gate-title').textContent='Scheduled.';document.getElementById('gate-sub').textContent=worryTime+' — see you then.';}else{pbox.style.display='none';stdmsg.style.display='block';if(lastPath==='practical'){document.getElementById('gate-headline').textContent='Step planned.';document.getElementById('gate-body').textContent="The worry's done its job.";document.getElementById('gate-letgo').textContent='You can now let it go.';document.getElementById('gate-title').textContent='Step planned.';document.getElementById('gate-sub').textContent='You can let this rest now.';}else{document.getElementById('gate-headline').textContent='You walked through it.';document.getElementById('gate-body').textContent="It's in the park now.";document.getElementById('gate-letgo').textContent='You can now let it go.';document.getElementById('gate-title').textContent='Parked. 🌳';document.getElementById('gate-sub').textContent="The gate's closed behind you.";}}}
 function replayGate(){var old=document.getElementById('gate-scene');if(!old)return;var fresh=old.cloneNode(true);fresh.id='gate-scene';old.parentNode.replaceChild(fresh,old);}
 function fullReset(){qVals={};bPicked=[];chosenOption='';worryTime='';lastPath='hyp';document.querySelectorAll('.qb').forEach(function(b){b.style.background='white';b.style.borderColor='#b8d4b8';b.style.color='#1a2e1a';});document.getElementById('q-btn').disabled=true;document.getElementById('prac-badge').style.display='none';document.getElementById('bench-badge').style.display='none';document.getElementById('p-prac').className='pcard';document.getElementById('p-bench').className='pcard';document.getElementById('path-txt').textContent='Both paths are open.';document.querySelectorAll('.bta').forEach(function(ta){ta.value='';});document.querySelectorAll('#s-board .nt').forEach(function(n){n.classList.remove('sel','fdd','ht');});document.getElementById('brd-btn').disabled=true;document.getElementById('brd-hint').textContent='Tap up to 2 notices';document.querySelectorAll('.pt-opt').forEach(function(o){o.classList.remove('chosen');});document.getElementById('pt-btn').disabled=true;document.getElementById('step-ta').value='';document.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('ac');});document.getElementById('home-ta').value='';resetFeeling();}
 function resetClassifier(){qVals={};document.querySelectorAll('.qb').forEach(function(b){b.style.background='white';b.style.borderColor='#b8d4b8';b.style.color='#1a2e1a';});document.getElementById('q-btn').disabled=true;}
@@ -539,9 +537,9 @@ function resetFeeling(){document.querySelectorAll('.fb2').forEach(function(b){b.
 var qVals={};
 function qp(el,val,q){el.parentNode.querySelectorAll('.qb').forEach(function(b){b.style.background='white';b.style.borderColor='#b8d4b8';b.style.color='#1a2e1a';});var p=(val==='yes'||val==='real');el.style.background=p?'#d4edda':'#fdebc8';el.style.borderColor=p?'#2e7d5e':'#c8a000';el.style.color=p?'#1e5c35':'#7a4f00';qVals[q]=val;if(Object.keys(qVals).length>=3){document.getElementById('q-btn').disabled=false;var yc=Object.values(qVals).filter(function(v){return v==='yes'||v==='real';}).length;var pr=yc>=2;document.getElementById('prac-badge').style.display=pr?'block':'none';document.getElementById('bench-badge').style.display=!pr?'block':'none';document.getElementById('p-prac').className='pcard'+(pr?' sug':'');document.getElementById('p-bench').className='pcard'+(!pr?' sug':'');document.getElementById('path-txt').textContent=pr?"Looks like this is something you can act on — but both paths are open.":"This looks more like a 'what if' — but both paths are open.";}}
 function npk(el){if(bPicked.length>=2&&!el.classList.contains('sel'))return;var key=el.innerText.replace('✓','').trim().slice(0,30);if(el.classList.contains('sel')){el.classList.remove('sel');bPicked=bPicked.filter(function(p){return p!==key;});}else{el.classList.add('sel');bPicked.push(key);}updateBrd();}
-['nb0','nb1','nb2','nb3','nb4'].forEach(function(id){var card=document.getElementById(id);if(!card)return;var ta=card.querySelector('.bta');ta.addEventListener('input',function(){card.classList.toggle('ht',ta.value.trim().length>0);if(!ta.value.trim()){card.classList.remove('sel');bPicked=bPicked.filter(function(p){return p!==id;});updateBrd();}});card.addEventListener('click',function(e){if(e.target===ta)return;if(!card.classList.contains('ht'))return;if(bPicked.length>=2&&!card.classList.contains('sel'))return;if(card.classList.contains('sel')){card.classList.remove('sel');bPicked=bPicked.filter(function(p){return p!==id;});}else{card.classList.add('sel');bPicked.push(id);}updateBrd();});ta.addEventListener('blur',function(){if(!ta.value.trim()||card.classList.contains('sel')||bPicked.length>=2)return;card.classList.add('sel');bPicked.push(id);updateBrd();});});
+['nb0','nb1','nb2'].forEach(function(id){var card=document.getElementById(id);if(!card)return;var ta=card.querySelector('.bta');ta.addEventListener('input',function(){card.classList.toggle('ht',ta.value.trim().length>0);if(!ta.value.trim()){card.classList.remove('sel');bPicked=bPicked.filter(function(p){return p!==id;});updateBrd();}});card.addEventListener('click',function(e){if(e.target===ta)return;if(!card.classList.contains('ht'))return;if(bPicked.length>=2&&!card.classList.contains('sel'))return;if(card.classList.contains('sel')){card.classList.remove('sel');bPicked=bPicked.filter(function(p){return p!==id;});}else{card.classList.add('sel');bPicked.push(id);}updateBrd();});ta.addEventListener('blur',function(){if(!ta.value.trim()||card.classList.contains('sel')||bPicked.length>=2)return;card.classList.add('sel');bPicked.push(id);updateBrd();});});
 function updateBrd(){var c=bPicked.length;document.getElementById('brd-btn').disabled=c<2;document.getElementById('brd-hint').textContent=c===0?'Tap up to 2 notices':c===1?'1 picked — one more':'2 picked — ready';document.querySelectorAll('#s-board .nt').forEach(function(n){if(!n.classList.contains('sel'))n.classList.toggle('fdd',c>=2);});}
-function getLabel(key){if(['nb0','nb1','nb2','nb3','nb4'].indexOf(key)>=0){var ta=document.querySelector('#'+key+' .bta');return ta?ta.value.trim():key;}return key;}
+function getLabel(key){if(['nb0','nb1','nb2'].indexOf(key)>=0){var ta=document.querySelector('#'+key+' .bta');return ta?ta.value.trim():key;}return key;}
 function buildPC(){var pair=document.getElementById('pc-pair');pair.innerHTML='';document.getElementById('pc-btn').disabled=true;bPicked.slice(0,2).forEach(function(key,i){var label=getLabel(key)||('Option '+(i+1));var card=document.createElement('div');card.className='pc-opt';card.innerHTML='<div class="pc-chosen-badge">Going with this</div><div class="pc-name">'+label+'</div><div class="pc-sec pc-for"><div class="pc-head">For</div><textarea class="pc-field" rows="2" placeholder="why this works..."></textarea></div><div class="pc-sec pc-ag"><div class="pc-head">Against</div><textarea class="pc-field" rows="2" placeholder="any downsides..."></textarea></div>';card.onclick=function(e){if(e.target.tagName==='TEXTAREA')return;document.querySelectorAll('.pc-opt').forEach(function(c){c.classList.remove('chosen','faded');});card.classList.add('chosen');document.querySelectorAll('.pc-opt').forEach(function(c){if(c!==card)c.classList.add('faded');});chosenOption=label;document.getElementById('pc-btn').disabled=false;};pair.appendChild(card);});}
 function setSb(el){document.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('ac');});el.classList.add('ac');}
 var SENSES=[{n:5,ico:'👁',lbl:'Things you can SEE',pro:'Look around slowly. Name 5 things you can see right now.'},{n:4,ico:'👂',lbl:'Things you can HEAR',pro:'Go quiet. Name 4 sounds — near and far.'},{n:3,ico:'🤚',lbl:'Things you can TOUCH',pro:'Notice textures. Name 3 things you can feel.'},{n:2,ico:'👃',lbl:'Things you can SMELL',pro:'Breathe in. Name 2 smells — real or remembered.'},{n:1,ico:'👅',lbl:'Thing you can TASTE',pro:'Notice your mouth. One taste or sensation.'}];
@@ -564,6 +562,61 @@ function pickTime(el,time){document.querySelectorAll('.pt-opt').forEach(function
 function pickFeel(el,distressed){document.querySelectorAll('.fb2').forEach(function(b){b.classList.remove('ac');});el.classList.add('ac');var sb=document.getElementById('support-box');var fb=document.getElementById('feel-btn');if(distressed){sb.classList.add('show');fb.style.display='none';}else{sb.classList.remove('show');fb.style.display='block';fb.disabled=false;}}
 buildPDots();
 setTimeout(startHomeBreath,400);
+
+// Calm park ambient sound — drops in music.mp3 when available, falls back to synth
+// Pixabay License (for music.mp3): free, no attribution required, commercial use allowed
+var spaAudio=null,spaCtx=null,spaMaster=null,spaStarted=false,spaMuted=false;
+function toggleMusic(){
+  spaMuted=!spaMuted;
+  document.getElementById('music-btn').textContent=spaMuted?'🔇':'🔊';
+  if(spaAudio) spaAudio.muted=spaMuted;
+  if(spaMaster){
+    spaMaster.gain.cancelScheduledValues(spaCtx.currentTime);
+    spaMaster.gain.linearRampToValueAtTime(spaMuted?0:0.15,spaCtx.currentTime+0.5);
+  }
+  // Start music on first unmute if not yet started
+  if(!spaMuted && !spaStarted) startSpaMusic();
+}
+function fadeInAudio(el,targetVol){
+  var vol=0,step=targetVol/40;
+  var fi=setInterval(function(){vol=Math.min(vol+step,targetVol);el.volume=vol;if(vol>=targetVol)clearInterval(fi);},100);
+}
+function startSynthFallback(){
+  try{
+    spaCtx=new(window.AudioContext||window.webkitAudioContext)();
+    spaMaster=spaCtx.createGain();
+    var master=spaMaster;
+    master.gain.setValueAtTime(0,spaCtx.currentTime);
+    if(!spaMuted) master.gain.linearRampToValueAtTime(0.15,spaCtx.currentTime+4);
+    master.connect(spaCtx.destination);
+    [[220,0.38],[330,0.22],[440,0.14],[165,0.28]].forEach(function(fd){
+      var osc=spaCtx.createOscillator(),g=spaCtx.createGain();
+      var lfo=spaCtx.createOscillator(),lfoG=spaCtx.createGain();
+      lfo.frequency.value=0.08+Math.random()*0.06;lfoG.gain.value=fd[1]*0.25;
+      lfo.connect(lfoG);lfoG.connect(g.gain);lfo.start();
+      osc.type='sine';osc.frequency.value=fd[0];g.gain.value=fd[1];
+      osc.connect(g);g.connect(master);osc.start();
+    });
+    var buf=spaCtx.createBuffer(1,spaCtx.sampleRate*4,spaCtx.sampleRate);
+    var d=buf.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1);
+    var src=spaCtx.createBufferSource(),filt=spaCtx.createBiquadFilter(),ng=spaCtx.createGain();
+    src.buffer=buf;src.loop=true;filt.type='lowpass';filt.frequency.value=180;ng.gain.value=0.04;
+    src.connect(filt);filt.connect(ng);ng.connect(master);src.start();
+  }catch(e){}
+}
+function startSpaMusic(){
+  if(spaStarted)return;
+  spaStarted=true;
+  try{
+    spaAudio=new Audio('music.mp3');
+    spaAudio.loop=true;spaAudio.volume=0;
+    spaAudio.addEventListener('error',function(){spaAudio=null;startSynthFallback();},{once:true});
+    spaAudio.addEventListener('canplay',function(){spaAudio.play().then(function(){fadeInAudio(spaAudio,0.22);}).catch(function(){startSynthFallback();});},{once:true});
+    // If no response after 1.5s assume file absent, use synth
+    setTimeout(function(){if(spaAudio&&spaAudio.readyState===0){spaAudio=null;startSynthFallback();}},1500);
+  }catch(e){startSynthFallback();}
+}
+document.addEventListener('click',function(){startSpaMusic();},{once:true,capture:true});
 </script>
 </body>
 </html>
